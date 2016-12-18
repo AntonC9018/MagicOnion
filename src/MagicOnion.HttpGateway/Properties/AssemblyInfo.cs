@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MagicOnion.CodeGenerator")]
+[assembly: AssemblyTitle("MagicOnion.HttpGateway")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MagicOnion.CodeGenerator")]
+[assembly: AssemblyProduct("MagicOnion.HttpGateway")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9633b452-a984-46a6-9a92-b6291561ba09")]
+[assembly: Guid("fce03661-803e-4629-944f-45db6b444320")]
 
 // Version information for an assembly consists of the following four values:
 //
