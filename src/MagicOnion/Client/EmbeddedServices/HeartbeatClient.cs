@@ -36,7 +36,7 @@ namespace MagicOnion.Client.EmbeddedServices
             : base(callInvoker)
         {
             this.connectionId = connectionId;
-            this.option = this.option.WithHeaders(new Metadata { { ConnectionContext.HeaderKey, connectionId } });
+            this.option = this.option.WithHeaders(new Metadata { { ChannelContext.HeaderKey, connectionId } });
         }
 
         protected override MagicOnionClientBase<IMagicOnionEmbeddedHeartbeat> Clone()

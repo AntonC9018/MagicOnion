@@ -10,6 +10,8 @@ namespace MagicOnion.Client
 {
     public class ChannelContext : IDisposable
     {
+        public const string HeaderKey = "connection_id";
+
         readonly Channel channel;
         readonly bool useSameId;
         readonly Func<string> connectionIdFactory;
@@ -102,7 +104,7 @@ namespace MagicOnion.Client
             where T : IService<T>
         {
             return MagicOnionClient.Create<T>(channel)
-                .WithHeaders(new Metadata { { ConnectionContext.HeaderKey, ConnectionId } });
+                .WithHeaders(new Metadata { { ChannelContext.HeaderKey, ConnectionId } });
         }
 
         public void Dispose()
