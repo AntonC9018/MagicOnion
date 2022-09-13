@@ -39,7 +39,11 @@ namespace MagicOnion.GeneratorCore.Utils
             // MonoBleedingEdge = .NET 4.x Unity metadata
             // 2.0.0 = .NET Standard 2.0 Unity metadata
             var metadata = new List<PortableExecutableReference>();
-            var targetMetadataLocations = locations.Select(Path.GetFullPath).Concat(GetStandardReferences()).Distinct().Where(x => !(x.Contains("MonoBleedingEdge") || x.Contains("2.0.0")));
+            var targetMetadataLocations = locations
+                .Select(Path.GetFullPath)
+                // .Concat(GetStandardReferences())
+                .Distinct()
+                .Where(x => !(x.Contains("MonoBleedingEdge") || x.Contains("2.0.0")));
             foreach (var item in targetMetadataLocations)
             {
                 if (File.Exists(item))
