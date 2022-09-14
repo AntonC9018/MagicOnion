@@ -14,7 +14,7 @@ This framework is based on [gRPC](https://grpc.io/), which is a fast and compact
 
 > Interfaces are schemas and provide API services, just like the plain C# code
 
-![image](https://user-images.githubusercontent.com/46207/50965825-7bae6000-1516-11e9-9501-dc91582f4d1b.png)
+![image](https://user-images.githubusercontent.com/46207/50965825-7bae6000-1516-11e9-9501F-dc91582f4d1b.png)
 
 > Using the StreamingHub real-time communication service, the server can broadcast data to multiple clients
 
@@ -789,9 +789,9 @@ MagicOnion's engine catched exception(except ReturnStatusException), set `Status
 ### Group and GroupConfiguration
 StreamingHub's broadcast system is called Group. It can get from StreamingHub impl method, `this.Group`(this.Group type is `HubGroupRepository`, not `IGroup`).
 
-Current connection can add to group by `this.Group.AddAsync(string groupName)`, return value(`IGroup`) is joined group broadcaster so cache to field. It is enable per connection(if disconnected, automatically leaved from group). If you want to use some restriction, you can use `TryAddAsync(string groupName, int incluciveLimitCount, bool createIfEmpty)`.
+Current connection can join a group by using `this.Group.AddAsync(string groupName)`, return value(`IGroup`) is the broadcaster of the joined groupm and should be cached. Being part of a group is posssible only while the connection is active (on disconnection, the group is left automatically). You can also set restrictions when creating a group, check out `TryAddAsync(string groupName, int incluciveLimitCount, bool createIfEmpty)`.
 
-`IGroup` can pass to StreamingHub.`Broadcast`, `BroadcastExceptSelf`, `BroadcastExcept` and calls client proxy.
+`IGroup` can pass to StreamingHub. `Broadcast`, `BroadcastExceptSelf`, `BroadcastExcept` and calls client proxy.
 
 ```csharp
 public class ChatHub : StreamingHubBase<IChatHub, IMessageReceiver>, IChatHub
@@ -812,17 +812,19 @@ public class ChatHub : StreamingHubBase<IChatHub, IMessageReceiver>, IChatHub
 }
 ```
 
-> GroupRepository is created per StreamingHub type
+> A GroupRepository is created per StreamingHub type
 
-> If you want to create ServerSide loop and broadcast out of StreamingHub, you can pass Broadcast(room) result but it is unnatural, I'll add support kit of create server-side loop  
+> If you want to create a server-side loop and broadcast out of StreamingHub, you can pass Broadcast(room) result but it is unnatural, I'll add support kit for creating a server-side loop.
 
-Group has in-memory storage, it can store extra data to group member. It can set `Group.AddAsync(string groupName, TStorage data)` instead of standard AddAsync.
+Group has in-memory storage, which can associate extra data to a group member. For that, use the overload `Group.AddAsync(string groupName, TStorage data)` instead of the standard AddAsync.
 
-Data is can get from `group.GetInMemoryStorage<T>` and can invoke `AllValues`, `Set(Guid connectionId, T Value)`, `Get(Guid connectionId)`.
+The in-memory storage can be retrieved by using `group.GetInMemoryStorage<T>` and manipulated via `AllValues`, `Set(Guid connectionId, T Value)`, `Get(Guid connectionId)`.
 
 > StreamingHub's ConnectionId is ServiceContext.ContextId
 
-Default MagicOnion's group is inmemory and using `ImmutableArrayGroup`. This group implementation is tuned for small room, not enter/leave frequently. If large room and enter/leave frequently design, you can use `ConcurrentDictionaryGroup`. It can configure by `GroupConfigurationAttribute` or `MagicOnionOptions.DefaultGroupRepositoryFactory`.
+Default MagicOnion's group implementation is in-memory and uses `ImmutableArrayGroup`.
+This group implementation is tuned for small rooms, not designed to be entered/left frequently. If a large room and frequent enters or leaves are desired, you can use `ConcurrentDictionaryGroup`.
+It can be configured by using `GroupConfigurationAttribute` or `MagicOnionOptions.DefaultGroupRepositoryFactory`.
 
 ```csharp
 // use ***GroupRepositoryFactory type.
@@ -858,13 +860,14 @@ public class ...
 ```
 
 ### Project Structure
-If creates Server-Client project, I recommend make three projects. `Server`, `ServerDefinition`, `Client`.
+
+If you're going to create a Server-Client project, I recommend to make three projects: `Server`, `ServerDefinition`, `Client`.
 
 ![image](https://cloud.githubusercontent.com/assets/46207/21081857/e0f6dfce-c012-11e6-850d-358c5b928a82.png)
 
-ServerDefinition is only defined interface(`IService<>`, `IStreamingHub<,>`)(and some share request/response types).
+ServerDefinition should only contain the shared interface definitions(`IService<>`, `IStreamingHub<,>`) and the shared request/response types.
 
-If debugging, I recommend use [SwitchStartupProject](https://marketplace.visualstudio.com/items?itemName=vs-publisher-141975.SwitchStartupProjectforVS2017) extension of VisualStudio and launch both Server and Client.
+If debugging, I recommend to use the [SwitchStartupProject](https://marketplace.visualstudio.com/items?itemName=vs-publisher-141975.SwitchStartupProjectforVS2017) extension of VisualStudio and launch both Server and Client.
 
 ```json
 "MultiProjectConfigurations": {
